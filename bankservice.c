@@ -39,6 +39,7 @@ void finish_with_error(MYSQL *con)
 
 void Register ()
 {
+
     char phone [50];
     char accountNumber [50];
     char username [50];
