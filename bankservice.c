@@ -36,7 +36,6 @@ void finish_with_error(MYSQL *con)
   mysql_close(con);
   exit(1);
 }
-
 void Register ()
 {
     char phone [50];
