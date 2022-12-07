@@ -42,3 +42,66 @@ void finish_with_error(MYSQL *con)
   mysql_close(con);
   exit(1);
 }
+
+   // sprintf(query,"select * from users where accountNumber='123'");
+
+// "select accountNumber,password from users where accountNumber=('%s')",user->accountNumber);
+ /* if (mysql_query(conn,query))
+   {
+    printf("\n unable to connect to your account  \n");
+     finish_with_error(conn);
+  }
+    mysql_close(conn);
+    printf("show data successfully \n");
+ int status=0;
+
+do {
+    MYSQL_RES * result=mysql_store_result(conn);
+    if (result==NULL)
+    {
+      finish_with_error(conn);
+    }
+    MYSQL_ROW row= mysql_fetch_row(result);
+    printf("%s \n",row[0]);
+    status=mysql_next_result(conn);
+    if (status >0)
+    {
+      finish_with_error(conn);
+    }
+    }while(status==0);
+    mysql_close(conn);
+    exit(0);
+    */
+
+      /* if (mysqlStatus)
+        {
+               finish_with_error(conn);
+        }
+    else {
+        mysqlResult=mysql_store_result(conn);
+
+    }*/
+ /*  numRows=mysql_fetch_row(mysqlResult);
+    for (int i=0; i<numFields; i++)
+    {
+     //    printf("fdfdffdfd %s \n",mysqlFields[i]);
+
+        printf("%s \t", mysqlFields[i].name);
+    }
+   // printf("/n");
+    while (mysqlRow=mysql_fetch_row(mysqlResult))
+    {
+        for(int j=0 ; j<numFields; j++){
+            printf("%s \t",mysqlRow[j] ? mysqlRow[j]: "NULL" );
+
+        }
+/*
+   // printf("/n");
+
+  /*  if (mysqlResult)
+    {
+        mysql_free_result(mysqlResult);
+        mysqlResult=NULL;
+
+    }
+    }*/
