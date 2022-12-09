@@ -106,6 +106,7 @@ void Login ()
     MYSQL *conn=mysql_init(NULL);
     connection(conn);
     system("clear");
+    char continuer;
 
     printf("\n Account number :\t");
     scanf("%s",user->accountNumber);
@@ -140,12 +141,17 @@ void Login ()
 
                 //print column heards
                 //  printf(" %s \t\t",mysqlFields->name );
-                printf("\t");
+            printf("\t");
             printf("Welcome to %s",mysqlRow[1]);
             menu();
             printf("\n +---------------+----------+----------+---------+----------+----------+-------- \t\t\n");
             // ShowBalance();
             int choice;
+           do  {
+
+                printf("\n \n Do you want to continue ?  [y/n] : \t ");
+                scanf("%s",&continuer);
+
             do
             {
                 printf("\n\n Please enter your choice : \t");
@@ -161,7 +167,9 @@ void Login ()
                 case 2:
                     printf("Enter amount to be added : \t");
                     scanf("%d",&balance);
+
                     sprintf(query,"UPDATE users SET balance=('%d') WHERE accountNumber=('%s')",balance,user->accountNumber);
+
                     if (mysql_query(conn,query))
                     {
                         printf("\n unable to update data into user table \n");
@@ -172,26 +180,36 @@ void Login ()
                     break;
                 case 3:
                     system("clear");
+                    printf("Your current balance is Rs : %s \n",mysqlRow[3]);
+
+                    int widhAmnount=atoi(mysqlRow[3]);
+
                     printf("Enter widhdraw amount : \t");
                     scanf("%d",&amount);
+
+
                     if (amount % 500 !=0)
 
                     {
-                        sprintf(query,"UPDATE users SET balance=('%d') WHERE accountNumber=('%s')",user->balance,user->accountNumber);
+                        widhAmnount=widhAmnount-amount;
+                        sprintf(query,"UPDATE users SET balance=('%d') WHERE accountNumber=('%s')",widhAmnount,user->accountNumber);
                         if (mysql_query(conn,query))
                         {
                             printf("\n unable to update data into user table \n");
                             finish_with_error(conn);
                         }
                         printf("You have withdrawn  Rs .%d \n",amount);
+                        printf("\n you have now :%d  \t",widhAmnount);
 
                     }
 
                 }
             }
             while (choice >=6);
+            }while(continuer == 'y');
 
         }
+
     }
     else
     {
