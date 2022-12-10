@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <mysql/mysql.h>
-#include<string.h>
 #include </home/karima/Downloads/conio2.h>
 #pragma comment (lib,"libmysql.lib");
+#include<string.h>
+#include <termios.h>
+
+
 
 typedef struct
 {
@@ -39,6 +42,20 @@ void finish_with_error(MYSQL *con)
     mysql_close(con);
     exit(1);
 }
+void takepassword(char pwd[50])
+{
+    int i;
+    char ch;
+    printf("\n enter Password :\t");
+
+    for (i=0; i<6;i++){
+        pwd[i]=ch;
+        ch="*";
+       printf("%c" ,pwd[i]);
+
+    }
+
+}
 
 void Register ()
 {
@@ -46,8 +63,6 @@ void Register ()
     MYSQL *conn=mysql_init(NULL);
     connection(conn);
     system("clear");
-    system("Color 57");
-    // textbackground(RED);
     printf("\n ******************* Add New Account ******************* \n");
     printf("\n Enter your account number: \t");
     scanf("%s",user->accountNumber);
@@ -269,10 +284,12 @@ void main()
     int opt;
     int amount;
     char cont='y';
+    printf("\n\t\t\t -------Welcome to bank system -------");
 
     printf("\n What do you want to do ?");
     printf("\n\n1. Create a new account");
     printf("\n\n2. Login to your account");
+
     do
     {
         printf("\n\n Please enter your choice : \t");
