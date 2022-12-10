@@ -42,20 +42,6 @@ void finish_with_error(MYSQL *con)
     mysql_close(con);
     exit(1);
 }
-void takepassword(char pwd[50])
-{
-    int i;
-    char ch;
-    printf("\n enter Password :\t");
-
-    for (i=0; i<6;i++){
-        pwd[i]=ch;
-        ch="*";
-       printf("%c" ,pwd[i]);
-
-    }
-
-}
 
 void Register ()
 {
@@ -95,43 +81,35 @@ void Register ()
 
 void menu()
 {
-    printf("\n Press 1 for balance inquiry");
+    printf("\n Press 1 for Account Details");
     printf("\n Press 2 for adding fund");
     printf("\n Press 3 for cash withdraw");
-    printf("\n Press 4 for online trnasfer");
+    printf("\n Press 4 for online transfer");
     printf("\n Press 5 for changing password \n\n");
 }
 
-int enterChoice()
-{
-    int choice;
-    do
-    {
-        printf("\n\n Please enter your choice : \t");
-        scanf("%d",&choice);
-    }
-    while (choice >=6);
-    return choice;
-}
 void Login ()
 {
     User *user;
     int amount;
     char query[1024];
     MYSQL *conn=mysql_init(NULL);
-    connection(conn);
-    system("clear");
     char continuer;
-
-    printf("\n Account number :\t");
-    scanf("%s",user->accountNumber);
-
-    printf("\n Password :\t");
-    scanf("%s",user->password);
+    int count =0;
     MYSQL_ROW mysqlRow;
     MYSQL_FIELD *mysqlFields;
-    my_ulonglong numRows;
+    int numRows;
     unsigned int numFields;
+    int trans_mt;
+    char ac[50];
+    char password [50];
+
+    system("clear");
+    connection(conn);
+    printf("\n Account number :\t");
+    scanf("%s",user->accountNumber);
+    printf("\n Password :\t");
+    scanf("%s",user->password);
 
     system("clear");
 
@@ -149,79 +127,108 @@ void Login ()
     {
         numRows=mysql_num_rows(mysqlResult);
         numFields=mysql_num_fields(mysqlResult);
-        // printf("number of rows=%d number of fields=%d \n",numRows,numFields);
         while ((mysqlRow=mysql_fetch_row(mysqlResult)))
         {
             while(mysqlFields= mysql_fetch_field(mysqlResult))
 
                 //print column heards
                 //  printf(" %s \t\t",mysqlFields->name );
-            printf("\t");
-            printf("Welcome to %s",mysqlRow[1]);
+                printf("\t");
+            printf("Welcome to BANK SERVICE %s",mysqlRow[1]);
             menu();
             printf("\n +---------------+----------+----------+---------+----------+----------+-------- \t\t\n");
-            // ShowBalance();
+
             int choice;
-           do  {
+            do
+            {
 
                 printf("\n \n Do you want to continue ?  [y/n] : \t ");
                 scanf("%s",&continuer);
 
-            do
-            {
-                printf("\n\n Please enter your choice : \t");
-                scanf("%d",&choice);
-
-                int balance;
-                switch(choice)
+                do
                 {
-                case 1:
-                    printf("Your current balance is Rs : %s \n",mysqlRow[3]);
-                    //  menu();
-                    break;
-                case 2:
-                    printf("Enter amount to be added : \t");
-                    scanf("%d",&balance);
+                    printf("\n\n Please enter your choice : \t");
+                    scanf("%d",&choice);
 
-                    sprintf(query,"UPDATE users SET balance=('%d') WHERE accountNumber=('%s')",balance,user->accountNumber);
-
-                    if (mysql_query(conn,query))
+                    int balance;
+                    switch(choice)
                     {
-                        printf("\n unable to update data into user table \n");
-                        finish_with_error(conn);
-                    }
-                    printf("You have depostied Rs .%d \n",balance);
+                    case 1:
+                        printf("Your current balance is Rs : %s \n",mysqlRow[3]);
+                        printf("\n account %s  \t", mysqlRow[1]);
+                        printf("\n phone %s \t",mysqlRow[2]);
+                        printf("\n");
+                        fflush(stdout);
 
-                    break;
-                case 3:
-                    system("clear");
-                    printf("Your current balance is Rs : %s \n",mysqlRow[3]);
+                        break;
+                    case 2:
+                        fflush(stdout);
 
-                    int widhAmnount=atoi(mysqlRow[3]);
+                        printf("Enter amount to be added : \t");
+                        scanf("%d",&balance);
 
-                    printf("Enter widhdraw amount : \t");
-                    scanf("%d",&amount);
+                        sprintf(query,"UPDATE users SET balance=('%d') WHERE accountNumber=('%s')",balance,user->accountNumber);
 
-
-                    if (amount % 500 !=0)
-
-                    {
-                        widhAmnount=widhAmnount-amount;
-                        sprintf(query,"UPDATE users SET balance=('%d') WHERE accountNumber=('%s')",widhAmnount,user->accountNumber);
                         if (mysql_query(conn,query))
                         {
                             printf("\n unable to update data into user table \n");
                             finish_with_error(conn);
                         }
-                        printf("You have withdrawn  Rs .%d \n",amount);
-                        printf("\n you have now :%d  \t",widhAmnount);
+                        printf("You have depostied Rs .%d \n",balance);
+
+                        break;
+                    case 3:
+                        fflush(stdout);
+                        system("clear");
+                        printf("Your current balance is Rs : %s \n",mysqlRow[3]);
+                        int widhAmnount=atoi(mysqlRow[3]);
+                        printf("Enter widhdraw amount : \t");
+                        scanf("%d",&amount);
+                        if (amount % 500 !=0)
+                        {
+                            widhAmnount=widhAmnount-amount;
+                            sprintf(query,"UPDATE users SET balance=('%d') WHERE accountNumber=('%s')",widhAmnount,user->accountNumber);
+                            if (mysql_query(conn,query))
+                            {
+                                printf("\n unable to update data into user table \n");
+                                finish_with_error(conn);
+                            }
+                            printf("You have withdrawn  Rs .%d \n",amount);
+                            printf("\n you have now :%d  \t",widhAmnount);
+                        }
+                        break;
+                    case 5:
+
+
+                          fflush(stdout);
+                      printf("************ CHANGE PASSWORD ************ \n");
+
+                        for (int i=0; i<80; i++)
+                        {
+                            printf("-");
+                        }
+
+                         fflush(stdout);
+
+                        printf("Enter new passwor : \t");
+                        scanf("%s",&password);
+
+                        sprintf(query,"UPDATE users SET password=('%s') WHERE accountNumber=('%s')",password,user->accountNumber);
+
+                        if (mysql_query(conn,query))
+                        {
+                            printf("\n unable to update data into user table \n");
+                            finish_with_error(conn);
+                        }
+                        printf("Your password has changed\n",user->password);
+
+                        break;
 
                     }
-
                 }
+                while (choice >=6);
             }
-            while (choice >=6);
-            }while(continuer == 'y');
+            while(continuer == 'y');
 
         }
 
