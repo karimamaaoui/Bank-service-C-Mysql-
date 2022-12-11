@@ -53,6 +53,9 @@ void Register ()
     printf("\n Enter your account number: \t");
     scanf("%s",user->accountNumber);
 
+    printf("\n Enter your user name: \t");
+    scanf("%s",user->username);
+
     printf("\n Enter your phone number :\t");
     scanf("%s",user->phone);
 
@@ -63,13 +66,13 @@ void Register ()
 
     user->balance=0;
 
-    if (mysql_query(conn, "CREATE TABLE IF NOT EXISTS users(accountNumber VARCHAR(255)PRIMARY KEY ,phone VARCHAR(255),password VARCHAR(255), balance Float default 0)"))
+    if (mysql_query(conn, "CREATE TABLE IF NOT EXISTS users(accountNumber VARCHAR(255)PRIMARY KEY ,username VARCHAR(255),phone VARCHAR(255),password VARCHAR(255), balance INT default 0)"))
 
     {
         finish_with_error(conn);
     }
     sprintf(query,
-            "INSERT INTO users (accountNumber,phone,password,balance) VALUES ('%s','%s','%s','%d')",user->accountNumber,user->phone,user->password,user->balance);
+            "INSERT INTO users (accountNumber,username,phone,password,balance) VALUES ('%s','%s','%s','%s','%d')",user->accountNumber,user->username,user->phone,user->password,0);
     if (mysql_query(conn,query))
     {
         printf("\n unable to insert data into user table \n");
@@ -95,13 +98,14 @@ void Login ()
     char query[1024];
     MYSQL *conn=mysql_init(NULL);
     char continuer;
-    int count =0;
+
     MYSQL_ROW mysqlRow;
+    MYSQL_ROW mysqlRow2;
     MYSQL_FIELD *mysqlFields;
-    int numRows;
+    int numRows,numRows2;
     unsigned int numFields;
     int trans_mt;
-    char ac[50];
+    char accountNumber [50];
     char password [50];
 
     system("clear");
@@ -131,9 +135,7 @@ void Login ()
         {
             while(mysqlFields= mysql_fetch_field(mysqlResult))
 
-                //print column heards
-                //  printf(" %s \t\t",mysqlFields->name );
-                printf("\t");
+            printf("\t");
             printf("Welcome to BANK SERVICE %s",mysqlRow[1]);
             menu();
             printf("\n +---------------+----------+----------+---------+----------+----------+-------- \t\t\n");
@@ -154,7 +156,7 @@ void Login ()
                     switch(choice)
                     {
                     case 1:
-                        printf("Your current balance is Rs : %s \n",mysqlRow[3]);
+                        printf("Your current balance is Rs : %s \n",mysqlRow[4]);
                         printf("\n account %s  \t", mysqlRow[1]);
                         printf("\n phone %s \t",mysqlRow[2]);
                         printf("\n");
@@ -197,20 +199,103 @@ void Login ()
                             printf("\n you have now :%d  \t",widhAmnount);
                         }
                         break;
-                    case 5:
-
-
-                          fflush(stdout);
-                      printf("************ CHANGE PASSWORD ************ \n");
+                    case 4:
+                        system("clear");
+                        printf("************ TRANSFERRING MONEY ************ \n");
 
                         for (int i=0; i<80; i++)
                         {
                             printf("-");
                         }
 
-                         fflush(stdout);
+                        int currentmt=atoi(mysqlRow[3]);
+                        printf("Your current balance is  : %d \n",currentmt);
 
-                        printf("Enter new passwor : \t");
+                        printf("Enter the account Number in which you want to transfer the money : \t");
+                        scanf("%s",&password);
+
+                        printf("\n Enter the amount you want to transfer : \t");
+                        scanf("%d",&trans_mt);
+
+
+                        /* sprintf(query,"select * from users where accountNumber=('%s')",password);
+
+                         if (mysql_query(conn,query))
+                         {
+
+                             finish_with_error(conn);
+                         }*/
+                        if (currentmt<trans_mt)
+                        {
+                            printf("****** You have not sufficient blanace ****** \n");
+                        }
+                        else
+                        {
+                            currentmt=currentmt-trans_mt;
+                            //  printf("Your new balance is  : %d \n",currentmt);
+                            //printf("Your nbr account is  : %s \n",user->accountNumber);
+                            sprintf(query,"UPDATE users SET balance=('%d') WHERE accountNumber=('%s')",currentmt,user->accountNumber);
+                            if (mysql_query(conn,query))
+                            {
+                                printf("\n unable to update data into user table \n");
+                                finish_with_error(conn);
+                            }
+                            //  printf("ac is  : %s \n",accountNumber);
+                            printf("trans_mt is  : %d \n",trans_mt);
+                            //printf("Your current balance is Rs : %s \n",mysqlRow[3]);
+
+
+                            sprintf(query,"select * from users where accountNumber=('%s')",password);
+
+                            if (mysql_query(conn,query))
+                            {
+
+                                finish_with_error(conn);
+                            }
+                            MYSQL_RES *result2=mysql_store_result(conn);
+
+                            if (result2)
+                            {
+                                numRows2=mysql_num_rows(result2);
+                                //  numFields=mysql_num_fields(mysqlResult);
+                                while ((mysqlRow2=mysql_fetch_row(result2)))
+                                {
+
+                                    printf("\t");
+                                  //  printf("mysqlRow[3] : %s \n",mysqlRow2[3]);
+
+                            int newbalance=atoi(mysqlRow2[3]);
+                            printf("newbalance is  : %d \n",newbalance);
+                            newbalance=newbalance+trans_mt;
+                            printf("newbalance 2 is  : %d \n",newbalance);
+
+                            sprintf(query,"UPDATE users SET balance=('%d') WHERE accountNumber=('%s')",newbalance,password);
+                            if (mysql_query(conn,query))
+                            {
+                                printf("\n unable to transfer data into user table \n");
+                                finish_with_error(conn);
+                            }
+                            printf("****** Money Transferred ****** \n");
+                            printf("Your current balance is : %d \n",currentmt);
+                            printf("\n %d You had transferred from your account to : %d \n",trans_mt,currentmt);
+
+ }
+                            }
+                        }
+                        break;
+
+                    case 5:
+
+
+                        fflush(stdout);
+                        printf("************ CHANGE PASSWORD ************ \n");
+
+                        for (int i=0; i<80; i++)
+                        {
+                            printf("-");
+                        }
+
+                        printf("Enter new password : \t");
                         scanf("%s",&password);
 
                         sprintf(query,"UPDATE users SET password=('%s') WHERE accountNumber=('%s')",password,user->accountNumber);
@@ -221,14 +306,14 @@ void Login ()
                             finish_with_error(conn);
                         }
                         printf("Your password has changed\n",user->password);
-
-                        break;
-
                     }
+                    break;
+
+
                 }
                 while (choice >=6);
             }
-            while(continuer == 'y');
+            while(continuer == 'y' ||continuer == 'Y');
 
         }
 
@@ -240,48 +325,6 @@ void Login ()
 }
 
 
-void ShowBalance()
-{
-    User *user;
-    char query[1024];
-    MYSQL *conn=mysql_init(NULL);
-    connection(conn);
-    system("clear");
-    MYSQL_ROW mysqlRow;
-    MYSQL_FIELD *mysqlFields;
-    int numRows;
-    unsigned int numFields;
-    MYSQL_RES *mysqlResult=mysql_store_result(conn);
-
-    sprintf(query,"select * from users where accountNumber=('%s') ",user->accountNumber);
-
-    if (mysql_query(conn,query))
-    {
-        finish_with_error(conn);
-    }
-
-    if (mysqlResult)
-    {
-        numRows=mysql_num_rows(mysqlResult);
-        numFields=mysql_num_fields(mysqlResult);
-        // printf("number of rows=%d number of fields=%d \n",numRows,numFields);
-        printf("\n +---------------+----------+----------+---------+----------+----------+-------- \t\t\n");
-
-        while ((mysqlRow=mysql_fetch_row(mysqlResult)))
-        {
-
-            printf("\t");
-            printf("Welcome to %s",mysqlRow[3]);
-            // menu();
-        }
-    }
-    else
-    {
-        printf("\n Account number or password incorrect \n");
-    }
-
-
-}
 void main()
 {
     User *user;
