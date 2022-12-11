@@ -154,9 +154,11 @@ void Login ()
                     {
                     case 1:
                         printf("Your current balance is Rs : %s \n",mysqlRow[4]);
-                        printf("\n account number : %s  \t", mysqlRow[1]);
-                        printf("\n username : %s \t",mysqlRow[2]);
-                        printf("\n phone number : %s \t",mysqlRow[3]);
+                        printf("\n account number : %s  \t", mysqlRow[0]);
+                        printf("\n username : %s \t",mysqlRow[1]);
+                        printf("\n phone number : %s \t",mysqlRow[2]);
+                        printf("\n paasword  : %s \t",mysqlRow[3]);
+
                         printf("\n");
                         fflush(stdout);
 
@@ -180,8 +182,8 @@ void Login ()
                     case 3:
                         fflush(stdout);
                         system("clear");
-                        printf("Your current balance is Rs : %s \n",mysqlRow[3]);
-                        int widhAmnount=atoi(mysqlRow[3]);
+                        printf("Your current balance is Rs : %s \n",mysqlRow[4]);
+                        int widhAmnount=atoi(mysqlRow[4]);
                         printf("Enter widhdraw amount : \t");
                         scanf("%d",&amount);
                         if (amount % 500 !=0)
