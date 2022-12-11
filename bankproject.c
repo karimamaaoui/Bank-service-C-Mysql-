@@ -217,14 +217,6 @@ void Login ()
                         printf("\n Enter the amount you want to transfer : \t");
                         scanf("%d",&trans_mt);
 
-
-                        /* sprintf(query,"select * from users where accountNumber=('%s')",password);
-
-                         if (mysql_query(conn,query))
-                         {
-
-                             finish_with_error(conn);
-                         }*/
                         if (currentmt<trans_mt)
                         {
                             printf("****** You have not sufficient blanace ****** \n");
@@ -232,19 +224,13 @@ void Login ()
                         else
                         {
                             currentmt=currentmt-trans_mt;
-                            //  printf("Your new balance is  : %d \n",currentmt);
-                            //printf("Your nbr account is  : %s \n",user->accountNumber);
                             sprintf(query,"UPDATE users SET balance=('%d') WHERE accountNumber=('%s')",currentmt,user->accountNumber);
                             if (mysql_query(conn,query))
                             {
                                 printf("\n unable to update data into user table \n");
                                 finish_with_error(conn);
                             }
-                            //  printf("ac is  : %s \n",accountNumber);
                             printf("trans_mt is  : %d \n",trans_mt);
-                            //printf("Your current balance is Rs : %s \n",mysqlRow[3]);
-
-
                             sprintf(query,"select * from users where accountNumber=('%s')",password);
 
                             if (mysql_query(conn,query))
@@ -257,13 +243,10 @@ void Login ()
                             if (result2)
                             {
                                 numRows2=mysql_num_rows(result2);
-                                //  numFields=mysql_num_fields(mysqlResult);
                                 while ((mysqlRow2=mysql_fetch_row(result2)))
                                 {
 
                                     printf("\t");
-                                  //  printf("mysqlRow[3] : %s \n",mysqlRow2[3]);
-
                             int newbalance=atoi(mysqlRow2[3]);
                             printf("newbalance is  : %d \n",newbalance);
                             newbalance=newbalance+trans_mt;
@@ -333,7 +316,6 @@ void main()
     int choice;
     int opt;
     int amount;
-    char cont='y';
     printf("\n\t\t\t -------Welcome to bank system -------");
 
     printf("\n What do you want to do ?");
@@ -355,10 +337,8 @@ void main()
     if (opt==2)
     {
         Login();
-        //  ShowBalance();
 
     }
-    //while (choice!=5)
 
 
 }
