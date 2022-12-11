@@ -2,9 +2,6 @@
 #include <stdlib.h>
 #include <mysql/mysql.h>
 #include </home/karima/Downloads/conio2.h>
-#pragma comment (lib,"libmysql.lib");
-#include<string.h>
-#include <termios.h>
 
 
 
@@ -14,7 +11,7 @@ typedef struct
     char accountNumber [50];
     char username [50];
     char password [50];
-    float balance;
+    int balance;
 } User;
 
 void connection (MYSQL *conn)
@@ -72,7 +69,7 @@ void Register ()
         finish_with_error(conn);
     }
     sprintf(query,
-            "INSERT INTO users (accountNumber,username,phone,password,balance) VALUES ('%s','%s','%s','%s','%d')",user->accountNumber,user->username,user->phone,user->password,0);
+            "INSERT INTO users (accountNumber,username,phone,password,balance) VALUES ('%s','%s','%s','%s','%d')",user->accountNumber,user->username,user->phone,user->password,user->balance);
     if (mysql_query(conn,query))
     {
         printf("\n unable to insert data into user table \n");
@@ -135,7 +132,7 @@ void Login ()
         {
             while(mysqlFields= mysql_fetch_field(mysqlResult))
 
-            printf("\t");
+                printf("\t");
             printf("Welcome to BANK SERVICE %s",mysqlRow[1]);
             menu();
             printf("\n +---------------+----------+----------+---------+----------+----------+-------- \t\t\n");
@@ -157,8 +154,9 @@ void Login ()
                     {
                     case 1:
                         printf("Your current balance is Rs : %s \n",mysqlRow[4]);
-                        printf("\n account %s  \t", mysqlRow[1]);
-                        printf("\n phone %s \t",mysqlRow[2]);
+                        printf("\n account number : %s  \t", mysqlRow[1]);
+                        printf("\n username : %s \t",mysqlRow[2]);
+                        printf("\n phone number : %s \t",mysqlRow[3]);
                         printf("\n");
                         fflush(stdout);
 
@@ -208,7 +206,7 @@ void Login ()
                             printf("-");
                         }
 
-                        int currentmt=atoi(mysqlRow[3]);
+                        int currentmt=atoi(mysqlRow[4]);
                         printf("Your current balance is  : %d \n",currentmt);
 
                         printf("Enter the account Number in which you want to transfer the money : \t");
@@ -247,22 +245,22 @@ void Login ()
                                 {
 
                                     printf("\t");
-                            int newbalance=atoi(mysqlRow2[3]);
-                            printf("newbalance is  : %d \n",newbalance);
-                            newbalance=newbalance+trans_mt;
-                            printf("newbalance 2 is  : %d \n",newbalance);
+                                    int newbalance=atoi(mysqlRow2[3]);
+                                    printf("newbalance is  : %d \n",newbalance);
+                                    newbalance=newbalance+trans_mt;
+                                    printf("newbalance 2 is  : %d \n",newbalance);
 
-                            sprintf(query,"UPDATE users SET balance=('%d') WHERE accountNumber=('%s')",newbalance,password);
-                            if (mysql_query(conn,query))
-                            {
-                                printf("\n unable to transfer data into user table \n");
-                                finish_with_error(conn);
-                            }
-                            printf("****** Money Transferred ****** \n");
-                            printf("Your current balance is : %d \n",currentmt);
-                            printf("\n %d You had transferred from your account to : %d \n",trans_mt,currentmt);
+                                    sprintf(query,"UPDATE users SET balance=('%d') WHERE accountNumber=('%s')",newbalance,password);
+                                    if (mysql_query(conn,query))
+                                    {
+                                        printf("\n unable to transfer data into user table \n");
+                                        finish_with_error(conn);
+                                    }
+                                    printf("****** Money Transferred ****** \n");
+                                    printf("Your current balance is : %d \n",currentmt);
+                                    printf("\n %d You had transferred from your account to : %d \n",trans_mt,currentmt);
 
- }
+                                }
                             }
                         }
                         break;
@@ -342,4 +340,3 @@ void main()
 
 
 }
-
