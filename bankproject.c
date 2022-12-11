@@ -3,8 +3,6 @@
 #include <mysql/mysql.h>
 #include </home/karima/Downloads/conio2.h>
 
-
-
 typedef struct
 {
     char phone [50];
