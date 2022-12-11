@@ -151,7 +151,7 @@ void Login ()
                     switch(choice)
                     {
                     case 1:
-                        printf("Your current balance is Rs : %s \n",mysqlRow[4]);
+                        printf("Your current balance is TND : %s \n",mysqlRow[4]);
                         printf("\n account number : %s  \t", mysqlRow[0]);
                         printf("\n username : %s \t",mysqlRow[1]);
                         printf("\n phone number : %s \t",mysqlRow[2]);
@@ -174,13 +174,13 @@ void Login ()
                             printf("\n unable to update data into user table \n");
                             finish_with_error(conn);
                         }
-                        printf("You have depostied Rs .%d \n",balance);
+                        printf("You have depostied TND .%d \n",balance);
 
                         break;
                     case 3:
                         fflush(stdout);
                         system("clear");
-                        printf("Your current balance is Rs : %s \n",mysqlRow[4]);
+                        printf("Your current balance is TND : %s \n",mysqlRow[4]);
                         int widhAmnount=atoi(mysqlRow[4]);
                         printf("Enter widhdraw amount : \t");
                         scanf("%d",&amount);
@@ -193,7 +193,7 @@ void Login ()
                                 printf("\n unable to update data into user table \n");
                                 finish_with_error(conn);
                             }
-                            printf("You have withdrawn  Rs .%d \n",amount);
+                            printf("You have withdrawn  TND .%d \n",amount);
                             printf("\n you have now :%d  \t",widhAmnount);
                         }
                         break;
